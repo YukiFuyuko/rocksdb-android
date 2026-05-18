@@ -1,3 +1,4 @@
 [submodule "rocksdb"]
 	path = rocksdb
-url=git@github.com:YukiFuyuko/rocksdb.git
+    url = https://github.com/YukiFuyuko/rocksdb
+    branch = master
