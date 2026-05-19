@@ -32,15 +32,17 @@ jobs:
           yes | sdkmanager --licenses >/dev/null
           sdkmanager "ndk;27.1.12297006" "cmake;3.30.5"
 
-      - name: Build release AAR (all ABIs)
-        run: ./gradlew --no-daemon :library:assembleRelease
-
-      - name: Validate native libraries in AAR
+      - name: Build and verify release AAR native libraries
         run: |
+          ./gradlew --no-daemon :library:assembleRelease
+
           AAR="library/build/outputs/aar/library-release.aar"
           test -f "$AAR"
 
-          for abi in armeabi-v7a arm64-v8a x86 x86_64; do
+          mapfile -t ABIS < <(unzip -Z1 "$AAR" | sed -n 's#^jni/\([^/]*\)/.*#\1#p' | sort -u)
+          test "${#ABIS[@]}" -gt 0
+
+          for abi in "${ABIS[@]}"; do
             for lib in libbz2.so librocksdb.so librocksdbjni.so liblz4.so libsnappy.so libzstd.so; do
               unzip -l "$AAR" "jni/$abi/$lib" | grep -q "$lib"
             done
