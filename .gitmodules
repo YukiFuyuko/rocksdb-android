@@ -1,0 +1,4 @@
+[submodule "rocksdb"]
+	path = rocksdb-jni
+    url = https://github.com/YukiFuyuko/rocksdb
+    branch = master
