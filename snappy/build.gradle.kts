@@ -24,7 +24,9 @@ android {
                     "-DBUILD_SHARED_LIBS=1",
                     "-DSNAPPY_HAVE_NEON=OFF",
                     "-DSNAPPY_BUILD_TESTS=OFF",
-                    "-DCMAKE_WARN_DEPRECATED=FALSE",
+                    "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-soname,libsnappy.so",
+                    "-DCMAKE_PLATFORM_NO_VERSIONED_SONAME=ON",
+                        "-DCMAKE_WARN_DEPRECATED=FALSE",
                     "-Wno-dev",
                 ))
             }

@@ -25,7 +25,10 @@ add_library(liblz4 SHARED ${LZ4_SRCS_LIB})
 
 set_target_properties(liblz4 PROPERTIES
         OUTPUT_NAME lz4
-        SOVERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}"
         )
+
+if(ANDROID)
+    target_link_options(liblz4 PRIVATE "-Wl,-soname,liblz4.so")
+endif()
 
 INCLUDE_DIRECTORIES (${LZ4_PATH})

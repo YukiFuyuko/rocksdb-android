@@ -35,3 +35,21 @@ include_directories(${zstd_INCLUDE_DIRS})
 
 # Now build RocksDB
 add_subdirectory(../rocksdb rocksdb-build)
+
+if(TARGET rocksdb-shared)
+    set_target_properties(rocksdb-shared PROPERTIES
+        OUTPUT_NAME rocksdb
+    )
+    if(ANDROID)
+        target_link_options(rocksdb-shared PRIVATE "-Wl,-soname,librocksdb.so")
+    endif()
+endif()
+
+if(TARGET rocksdbjni-shared)
+    set_target_properties(rocksdbjni-shared PROPERTIES
+        OUTPUT_NAME rocksdbjni
+    )
+    if(ANDROID)
+        target_link_options(rocksdbjni-shared PRIVATE "-Wl,-soname,librocksdbjni.so")
+    endif()
+endif()

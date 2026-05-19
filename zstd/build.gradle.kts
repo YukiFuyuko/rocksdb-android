@@ -24,6 +24,8 @@ android {
                 arguments.addAll(
                     listOf(
                         "-DZSTD_BUILD_SHARED=ON",
+                        "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-soname,libzstd.so",
+                        "-DCMAKE_PLATFORM_NO_VERSIONED_SONAME=ON",
                         "-DCMAKE_WARN_DEPRECATED=FALSE",
                         "-Wno-dev",
                     )

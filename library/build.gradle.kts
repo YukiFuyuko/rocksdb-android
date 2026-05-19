@@ -36,11 +36,12 @@ android {
                         "-DWITH_TOOLS=OFF",
                         "-DWITH_JNI=ON",
                         "-Wno-error",
+                        "-DCMAKE_PLATFORM_NO_VERSIONED_SONAME=ON",
                         "-DCMAKE_WARN_DEPRECATED=FALSE",
                         "-Wno-dev",
                     )
                 )
-                targets.add("rocksdbjni")
+                targets.add("rocksdbjni-shared")
             }
         }
         val archRaw = project.findProperty("arch") as? String ?: System.getProperty("arch")
@@ -84,6 +85,12 @@ android {
     sourceSets {
         this["main"].run {
             java.directories.add("../rocksdb/java/src/main/java")
+            jniLibs.srcDirs(
+                "../bz2/build/intermediates/library_and_local_jars_jni/release/copyReleaseJniLibsProjectAndLocalJars/jni",
+                "../lz4/build/intermediates/library_and_local_jars_jni/release/copyReleaseJniLibsProjectAndLocalJars/jni",
+                "../snappy/build/intermediates/library_and_local_jars_jni/release/copyReleaseJniLibsProjectAndLocalJars/jni",
+                "../zstd/build/intermediates/library_and_local_jars_jni/release/copyReleaseJniLibsProjectAndLocalJars/jni"
+            )
         }
         this["androidTest"].run {
             java.directories.add("src/androidTest/kotlin")
@@ -147,4 +154,12 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://git@github.com/marykdb/rocksdb-android.git")
         }
     }
+}
+
+
+tasks.matching { it.name == "mergeReleaseJniLibFolders" }.configureEach {
+    dependsOn(":lz4:copyReleaseJniLibsProjectAndLocalJars")
+    dependsOn(":snappy:copyReleaseJniLibsProjectAndLocalJars")
+    dependsOn(":bz2:copyReleaseJniLibsProjectAndLocalJars")
+    dependsOn(":zstd:copyReleaseJniLibsProjectAndLocalJars")
 }
