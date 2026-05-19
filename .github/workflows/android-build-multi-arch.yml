@@ -27,6 +27,11 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Install Android NDK and CMake
+        run: |
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager "ndk;27.1.12297006" "cmake;3.30.5"
+
       - name: Build release AAR (all ABIs)
         run: ./gradlew --no-daemon :library:assembleRelease -Parch=armeabi-v7a,arm64-v8a,x86,x86_64
 
