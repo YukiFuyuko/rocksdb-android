@@ -43,7 +43,9 @@ jobs:
           test "${#ABIS[@]}" -gt 0
 
           for abi in "${ABIS[@]}"; do
-            for lib in libbz2.so librocksdb.so librocksdbjni.so liblz4.so libsnappy.so libzstd.so; do
+            # The AAR only needs to ship the JNI entrypoint plus its runtime dependency.
+            # Other third-party libraries are linked into librocksdbjni.so.
+            for lib in librocksdbjni.so libc++_shared.so; do
               unzip -l "$AAR" "jni/$abi/$lib" | grep -q "$lib"
             done
           done
