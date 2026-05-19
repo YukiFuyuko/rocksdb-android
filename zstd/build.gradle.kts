@@ -14,8 +14,8 @@ val zstdHome = projectDir.resolve("zstd-$zstdVersion")
 
 android {
     namespace = "zstd"
-    compileSdk = 36
-    ndkVersion = "29.0.14206865"
+    compileSdk = 35
+    ndkVersion = "27.1.12297006"
     defaultConfig {
         minSdk = 21
         externalNativeBuild {
@@ -30,6 +30,23 @@ android {
                 )
             }
         }
+        val archRaw = project.findProperty("arch") as? String ?: System.getProperty("arch")
+        if (archRaw != null) {
+            val aliasMap = mapOf(
+                "arm" to "armeabi-v7a",
+                "arm64" to "arm64-v8a",
+                "x86_64" to "x86_64",
+                "x86" to "x86"
+            )
+            val abiList = archRaw.split(",").map { it.trim() }.map { abi ->
+                aliasMap[abi] ?: abi
+            }
+            ndk {
+                abiFilters.clear()
+                abiFilters.addAll(abiList)
+            }
+            externalNativeBuild.cmake.arguments.add("-DANDROID_ABI=${abiList.joinToString(";")}")
+        }
     }
     buildTypes {
         getByName("release") {
@@ -40,7 +57,7 @@ android {
     externalNativeBuild {
         cmake {
             path = File("$projectDir/zstd-${zstdVersion}/build/cmake/CMakeLists.txt")
-            version = "3.31.3"
+            version = "3.30.5"
         }
     }
 }
