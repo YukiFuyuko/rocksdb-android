@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 project(RocksDBWithDependencies)
 
+if(ANDROID)
+    set(CMAKE_SKIP_RPATH TRUE)
+endif()
+
 # Disable warnings that break the build with -Werror
 add_compile_options(-Wno-deprecated-copy -Wno-unused-but-set-variable -Wno-unused-variable -Wno-sign-compare -Wno-sync-alignment)
 
